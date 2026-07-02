@@ -20,7 +20,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 WATSONX_API_KEY    = os.getenv("WATSONX_API_KEY", "")
 WATSONX_PROJECT_ID = os.getenv("WATSONX_PROJECT_ID", "")
-WATSONX_URL        = os.getenv("WATSONX_URL", "hhttps://eu-de.ml.cloud.ibm.com")
+WATSONX_URL        = os.getenv("WATSONX_URL", "https://eu-de.ml.cloud.ibm.com")
 GRANITE_MODEL_ID   = os.getenv("GRANITE_MODEL_ID", "ibm/granite-4-h-small")
 
 # ---------------------------------------------------------------------------
