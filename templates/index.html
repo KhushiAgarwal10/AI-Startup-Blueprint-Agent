@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Startup Blueprint AI – Turn Ideas Into Ventures{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="hero-section">
+  <div class="container-xl">
+    <div class="row align-items-center min-vh-hero">
+
+      <div class="col-lg-6 hero-text">
+        <div class="badge-pill mb-3">
+          <i class="bi bi-stars me-1"></i>
+          IBM Granite &bull; watsonx.ai
+        </div>
+        <h1 class="display-4 fw-bold lh-sm mb-4">
+          Transform Your
+          <span class="text-gradient">Startup Idea</span>
+          Into a Complete Business Blueprint
+        </h1>
+        <p class="lead text-muted mb-4">
+          Describe your idea in plain English. Our AI — powered by IBM Granite on watsonx.ai —
+          generates an investor-ready, 18-section startup blueprint in seconds.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="/chat" class="btn btn-primary btn-lg px-4 shadow-sm">
+            <i class="bi bi-rocket-takeoff me-2"></i>Generate Blueprint
+          </a>
+          <a href="/dashboard" class="btn btn-outline-secondary btn-lg px-4">
+            <i class="bi bi-grid-3x3-gap me-2"></i>View Dashboard
+          </a>
+        </div>
+        <div class="hero-stats d-flex flex-wrap gap-4 mt-5">
+          <div class="stat-item">
+            <span class="stat-number">18</span>
+            <span class="stat-label">Blueprint Sections</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100</span>
+            <span class="stat-label">Readiness Score</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">&lt;60s</span>
+            <span class="stat-label">Generation Time</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 d-none d-lg-flex justify-content-end">
+        <div class="hero-illustration">
+          <div class="blueprint-card floating">
+            <div class="bc-header">
+              <i class="bi bi-file-earmark-text-fill me-2"></i>
+              Startup Blueprint
+            </div>
+            <div class="bc-body">
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>Executive Summary</div>
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>Business Model Canvas</div>
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>Market Opportunity</div>
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>Competitor Analysis</div>
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>SWOT Analysis</div>
+              <div class="bc-row"><i class="bi bi-check-circle-fill text-success me-2"></i>Go-to-Market Strategy</div>
+              <div class="bc-row text-muted"><i class="bi bi-plus-circle me-2"></i>12 more sections…</div>
+            </div>
+            <div class="bc-footer">
+              <span class="readiness-badge">Readiness Score: 84/100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section-pad bg-surface">
+  <div class="container-xl">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">How It Works</h2>
+      <p class="text-muted">Three simple steps to your complete startup blueprint</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card h-100">
+          <div class="feature-icon feature-icon-blue">
+            <i class="bi bi-lightbulb-fill"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">1. Describe Your Idea</h5>
+          <p class="text-muted small">
+            Type your startup concept in plain language — even a rough idea works.
+            The AI understands context, domain, and intent.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card h-100">
+          <div class="feature-icon feature-icon-purple">
+            <i class="bi bi-cpu-fill"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">2. AI Generates Blueprint</h5>
+          <p class="text-muted small">
+            IBM Granite on watsonx.ai analyses your idea across 18 business dimensions
+            and produces a structured, actionable blueprint.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card h-100">
+          <div class="feature-icon feature-icon-green">
+            <i class="bi bi-download"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">3. Download & Pitch</h5>
+          <p class="text-muted small">
+            Export your blueprint as a polished PDF, review your Business Readiness Score,
+            and start pitching investors with confidence.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES GRID ===== -->
+<section class="section-pad">
+  <div class="container-xl">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Everything a Founder Needs</h2>
+      <p class="text-muted">From idea validation to investor pitch — all in one place</p>
+    </div>
+    <div class="row g-3">
+      {% set features = [
+        ("bi-check2-circle",       "blue",   "Idea Validation",         "5-dimension validation before full blueprint generation"),
+        ("bi-graph-up-arrow",      "purple", "Business Readiness Score","Scored 0–100 across market, model, risk, and more"),
+        ("bi-diagram-3-fill",      "blue",   "Business Model Canvas",   "Full BMC with all 9 building blocks"),
+        ("bi-currency-dollar",     "green",  "Revenue Model",           "Multiple monetisation strategies ranked by fit"),
+        ("bi-bar-chart-fill",      "purple", "Market Opportunity",      "TAM / SAM / SOM with realistic estimates"),
+        ("bi-trophy-fill",         "blue",   "Competitor Analysis",     "Named competitors with positioning matrix"),
+        ("bi-grid-fill",           "green",  "SWOT Analysis",           "Strengths, Weaknesses, Opportunities, Threats"),
+        ("bi-cash-coin",           "purple", "Budget Estimation",       "Line-item startup cost breakdown"),
+        ("bi-megaphone-fill",      "blue",   "Go-to-Market Strategy",   "Launch channels, tactics, and timeline"),
+        ("bi-bank2",               "green",  "Funding Suggestions",     "VC, Angel, Grants, Bootstrapping options"),
+        ("bi-building-fill-check", "purple", "Gov. Startup Schemes",    "Relevant government programmes & incentives"),
+        ("bi-shield-check",        "blue",   "Legal Guidance",          "Entity type, IP, compliance essentials"),
+        ("bi-exclamation-triangle","green",  "Risk Analysis",           "Key risks with mitigation strategies"),
+        ("bi-map-fill",            "purple", "Growth Roadmap",          "12-month milestone plan with KPIs"),
+        ("bi-file-earmark-person", "blue",   "Investor Pitch Summary",  "Elevator pitch + one-page deck outline"),
+        ("bi-file-pdf-fill",       "green",  "PDF Export",              "Download a polished blueprint instantly"),
+        ("bi-clock-history",       "purple", "Blueprint History",       "Access and compare past blueprints"),
+        ("bi-moon-stars-fill",     "blue",   "Dark Mode",               "Full dark/light theme with persistence"),
+      ] %}
+      {% for icon, colour, title, desc in features %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="mini-feature d-flex align-items-start gap-3">
+          <div class="mini-icon mini-icon-{{ colour }}">
+            <i class="bi {{ icon }}"></i>
+          </div>
+          <div>
+            <div class="fw-semibold small">{{ title }}</div>
+            <div class="text-muted" style="font-size:.82rem">{{ desc }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-pad bg-cta">
+  <div class="container-xl text-center">
+    <h2 class="fw-bold text-white mb-3">Ready to Build Your Startup Blueprint?</h2>
+    <p class="text-white-50 mb-4">
+      Join thousands of founders who turned rough ideas into investor-ready business plans —
+      powered by IBM Granite AI.
+    </p>
+    <a href="/chat" class="btn btn-light btn-lg px-5 shadow">
+      <i class="bi bi-rocket-takeoff-fill me-2 text-primary"></i>
+      Start Generating — It's Free
+    </a>
+  </div>
+</section>
+
+{% endblock %}

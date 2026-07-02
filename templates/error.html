@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} – Startup Blueprint AI{% endblock %}
+
+{% block content %}
+<div class="container-xl text-center py-5" style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <div style="font-size:5rem;line-height:1" class="mb-3">
+    {% if code == 404 %}🔭{% else %}⚡{% endif %}
+  </div>
+  <h1 class="display-3 fw-bold text-accent">{{ code }}</h1>
+  <p class="lead text-muted mb-4">{{ message }}</p>
+  <a href="/" class="btn btn-primary btn-lg px-5">
+    <i class="bi bi-house me-2"></i>Back to Home
+  </a>
+</div>
+{% endblock %}

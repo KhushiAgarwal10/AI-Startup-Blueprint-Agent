@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – Startup Blueprint AI{% endblock %}
+
+{% block content %}
+<div class="container-xl py-5">
+
+  <!-- Header row -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">
+        <i class="bi bi-grid-3x3-gap-fill text-accent me-2"></i>Blueprint Dashboard
+      </h2>
+      <p class="text-muted mb-0">Your recent startup blueprints &amp; readiness scores</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/chat" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>New Blueprint
+      </a>
+      <button class="btn btn-outline-danger" id="btnClearHistory" {% if not history %}disabled{% endif %}>
+        <i class="bi bi-trash3 me-1"></i>Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center">
+        <div class="stat-card-value" id="statTotal">{{ history|length }}</div>
+        <div class="stat-card-label">Blueprints Generated</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center">
+        <div class="stat-card-value" id="statAvgScore">
+          {% if history %}
+            {{ (history | map(attribute='score') | list | sum / history|length) | round | int }}
+          {% else %}–{% endif %}
+        </div>
+        <div class="stat-card-label">Avg Readiness Score</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center">
+        <div class="stat-card-value" id="statTopScore">
+          {% if history %}
+            {{ history | map(attribute='score') | max }}
+          {% else %}–{% endif %}
+        </div>
+        <div class="stat-card-label">Highest Score</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center">
+        <div class="stat-card-value">
+          <i class="bi bi-cpu-fill" style="font-size:1.6rem;color:var(--color-accent)"></i>
+        </div>
+        <div class="stat-card-label">IBM Granite AI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blueprint cards -->
+  {% if history %}
+  <div class="row g-3" id="historyGrid">
+    {% for bp in history %}
+    <div class="col-md-6 col-xl-4">
+      <div class="bp-card h-100">
+        <!-- Card header -->
+        <div class="bp-card-header d-flex align-items-start justify-content-between gap-2">
+          <div>
+            <div class="fw-semibold">{{ bp.idea }}</div>
+            <small class="text-muted">
+              <i class="bi bi-clock me-1"></i>{{ bp.timestamp }}
+            </small>
+          </div>
+          <!-- Score ring -->
+          <div class="score-ring {% if bp.score >= 75 %}score-high{% elif bp.score >= 50 %}score-mid{% else %}score-low{% endif %}">
+            {{ bp.score }}
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="bp-card-body">
+          <p class="text-muted small">{{ bp.preview | truncate(200) }}</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="bp-card-footer d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary flex-grow-1 btn-view-blueprint"
+                  data-blueprint="{{ bp.blueprint | e }}"
+                  data-name="{{ bp.idea[:40] | e }}">
+            <i class="bi bi-eye me-1"></i>View
+          </button>
+          <button class="btn btn-sm btn-outline-success btn-dl-blueprint"
+                  data-blueprint="{{ bp.blueprint | e }}"
+                  data-name="{{ bp.idea[:40] | e }}">
+            <i class="bi bi-file-pdf-fill me-1"></i>PDF
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="empty-state-card">
+    <div class="empty-icon">
+      <i class="bi bi-inbox"></i>
+    </div>
+    <h4 class="fw-semibold mt-3">No Blueprints Yet</h4>
+    <p class="text-muted">
+      Generate your first startup blueprint and it will appear here.
+    </p>
+    <a href="/chat" class="btn btn-primary mt-2">
+      <i class="bi bi-rocket-takeoff me-2"></i>Generate Your First Blueprint
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- ===== Blueprint viewer modal ===== -->
+<div class="modal fade" id="blueprintModal" tabindex="-1" aria-labelledby="blueprintModalLabel">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="blueprintModalLabel">
+          <i class="bi bi-file-earmark-check-fill text-success me-2"></i>
+          <span id="modalBlueprintName">Startup Blueprint</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modalBlueprintContent" class="blueprint-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" id="modalDownloadPDF">
+          <i class="bi bi-file-pdf-fill me-1"></i>Download PDF
+        </button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Confirm clear modal ===== -->
+<div class="modal fade" id="clearModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Clear History
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete all saved blueprints? This cannot be undone.
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-danger" id="btnConfirmClear">
+          <i class="bi bi-trash3 me-1"></i>Yes, Clear All
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

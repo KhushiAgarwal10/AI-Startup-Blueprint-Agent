@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Generate Blueprint – Startup Blueprint AI{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Page-specific overrides only – main styles live in style.css */
+  .chat-page-wrapper { min-height: calc(100vh - 70px); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-page-wrapper d-flex flex-column">
+  <div class="container-xl py-3 flex-grow-1">
+    <div class="row g-4">
+
+      <!-- ============================================================
+           LEFT PANEL – Input & Controls
+      ============================================================ -->
+      <div class="col-lg-4 col-xl-3">
+        <div class="sidebar-panel">
+
+          <!-- Header -->
+          <div class="panel-header">
+            <i class="bi bi-rocket-takeoff-fill text-accent me-2"></i>
+            <strong>Blueprint Generator</strong>
+          </div>
+
+          <!-- Idea input -->
+          <div class="panel-body">
+            <label class="form-label fw-semibold" for="ideaInput">
+              Your Startup Idea
+              <span class="text-danger">*</span>
+            </label>
+            <textarea id="ideaInput"
+                      class="form-control"
+                      rows="6"
+                      maxlength="3000"
+                      placeholder="e.g. An AI-powered meal planning app that reduces food waste for busy families by personalising weekly grocery lists based on their eating habits, fridge inventory, and local store deals..."></textarea>
+            <div class="d-flex justify-content-between mt-1">
+              <small class="text-muted" id="charCount">0 / 3000</small>
+              <small class="text-muted">Min 10 chars</small>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-grid gap-2 mt-3">
+              <button id="btnGenerate" class="btn btn-primary btn-action">
+                <span class="btn-text">
+                  <i class="bi bi-magic me-2"></i>Generate Blueprint
+                </span>
+                <span class="btn-loading d-none">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Generating…
+                </span>
+              </button>
+              <button id="btnValidate" class="btn btn-outline-secondary btn-action">
+                <span class="btn-text">
+                  <i class="bi bi-check2-circle me-2"></i>Validate Idea First
+                </span>
+                <span class="btn-loading d-none">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Validating…
+                </span>
+              </button>
+            </div>
+
+            <!-- Error alert -->
+            <div id="errorAlert" class="alert alert-danger mt-3 d-none" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span id="errorMessage"></span>
+            </div>
+          </div>
+
+          <!-- Model info -->
+          <div class="panel-footer">
+            <div class="model-badge">
+              <i class="bi bi-cpu-fill me-1"></i>
+              IBM Granite &bull; watsonx.ai
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick tips -->
+        <div class="tips-card mt-3">
+          <div class="fw-semibold small mb-2">
+            <i class="bi bi-lightbulb-fill text-warning me-1"></i>Tips for better blueprints
+          </div>
+          <ul class="tips-list">
+            <li>Describe the problem clearly</li>
+            <li>Mention your target users</li>
+            <li>Include location / market if relevant</li>
+            <li>Note any existing solution or tech</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           RIGHT PANEL – Output
+      ============================================================ -->
+      <div class="col-lg-8 col-xl-9">
+
+        <!-- Empty state (shown before first generation) -->
+        <div id="emptyState" class="empty-state-card">
+          <div class="empty-icon">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          <h4 class="fw-semibold mt-3">Your Blueprint Will Appear Here</h4>
+          <p class="text-muted">
+            Enter your startup idea on the left and click
+            <strong>Generate Blueprint</strong> to get started.
+          </p>
+          <div class="example-ideas mt-4">
+            <div class="fw-semibold small mb-2 text-muted">Try one of these examples:</div>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+              <button class="btn btn-sm btn-outline-primary example-btn"
+                data-idea="A subscription-based platform that connects retired professionals as mentors to early-stage startup founders in emerging markets.">
+                Mentorship Platform
+              </button>
+              <button class="btn btn-sm btn-outline-primary example-btn"
+                data-idea="An AI-powered legal document drafting tool for small businesses in India that generates contracts, NDAs, and compliance docs in plain English.">
+                LegalTech for SMEs
+              </button>
+              <button class="btn btn-sm btn-outline-primary example-btn"
+                data-idea="A vertical SaaS platform for independent restaurants to manage inventory, reduce food waste, predict demand, and automate supplier ordering.">
+                Restaurant SaaS
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading animation -->
+        <div id="loadingState" class="loading-card d-none">
+          <div class="loading-animation">
+            <div class="loading-ring"></div>
+            <div class="loading-ring loading-ring-2"></div>
+          </div>
+          <h5 class="fw-semibold mt-4" id="loadingTitle">Analysing your idea…</h5>
+          <p class="text-muted small" id="loadingSubtitle">IBM Granite is crafting your blueprint</p>
+          <div class="loading-steps mt-3">
+            <div class="loading-step active" id="step1">
+              <i class="bi bi-check2-circle me-2"></i>Validating concept
+            </div>
+            <div class="loading-step" id="step2">
+              <i class="bi bi-arrow-right-circle me-2"></i>Analysing market
+            </div>
+            <div class="loading-step" id="step3">
+              <i class="bi bi-arrow-right-circle me-2"></i>Building canvas
+            </div>
+            <div class="loading-step" id="step4">
+              <i class="bi bi-arrow-right-circle me-2"></i>Generating roadmap
+            </div>
+            <div class="loading-step" id="step5">
+              <i class="bi bi-arrow-right-circle me-2"></i>Finalising blueprint
+            </div>
+          </div>
+        </div>
+
+        <!-- Validation result card -->
+        <div id="validationResult" class="result-card d-none mb-3">
+          <div class="result-card-header">
+            <i class="bi bi-check2-circle text-success me-2"></i>
+            Idea Validation Result
+            <button class="btn btn-sm btn-outline-secondary ms-auto"
+                    id="btnDismissValidation">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+          <div class="result-card-body">
+            <div id="validationContent" class="validation-content"></div>
+          </div>
+        </div>
+
+        <!-- Blueprint result -->
+        <div id="blueprintResult" class="result-card d-none">
+
+          <!-- Result toolbar -->
+          <div class="result-card-header d-flex align-items-center flex-wrap gap-2">
+            <i class="bi bi-file-earmark-check-fill text-success me-1"></i>
+            <span id="blueprintTitle" class="fw-semibold">Startup Blueprint</span>
+
+            <div class="ms-auto d-flex gap-2 flex-wrap">
+              <!-- Readiness score badge -->
+              <div class="readiness-badge-large" id="readinessBadge">
+                <i class="bi bi-speedometer2 me-1"></i>
+                Score: <span id="readinessScore">–</span>/100
+              </div>
+              <!-- Download PDF -->
+              <button class="btn btn-sm btn-success" id="btnDownloadPDF">
+                <i class="bi bi-file-pdf-fill me-1"></i>Download PDF
+              </button>
+              <!-- Copy -->
+              <button class="btn btn-sm btn-outline-secondary" id="btnCopy" title="Copy markdown">
+                <i class="bi bi-clipboard me-1"></i>Copy
+              </button>
+              <!-- New blueprint -->
+              <button class="btn btn-sm btn-outline-primary" id="btnNewBlueprint">
+                <i class="bi bi-plus-circle me-1"></i>New
+              </button>
+            </div>
+          </div>
+
+          <!-- Sections quick-nav -->
+          <div class="sections-nav" id="sectionsNav"></div>
+
+          <!-- Blueprint content with typing effect -->
+          <div class="result-card-body">
+            <div id="blueprintContent" class="blueprint-content"></div>
+          </div>
+        </div>
+
+      </div><!-- /col -->
+    </div><!-- /row -->
+  </div><!-- /container -->
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
