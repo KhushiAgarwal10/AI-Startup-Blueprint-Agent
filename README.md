@@ -1,7 +1,7 @@
 # 🚀 Startup Blueprint AI
 
 > **AI-powered startup blueprint generator** built with Python Flask, Bootstrap 5,  
-> and **IBM Granite on watsonx.ai** — deployable on IBM Cloud Code Engine.
+> and **IBM Granite on watsonx.ai**.
 
 ---
 
@@ -19,7 +19,6 @@
 | **Sections Quick-Nav** | Jump to any of the 18 sections with one click |
 | **Mobile Responsive** | Bootstrap 5 grid, tested on 320px–4K viewports |
 | **AGENT_INSTRUCTIONS** | Fully customisable agent persona, tone, safety rules, and scoring rubric |
-| **IBM Cloud Ready** | Port 8080, Gunicorn WSGI, non-root Docker user, Code Engine health probe |
 
 ---
 
@@ -30,9 +29,7 @@ startup-blueprint/
 ├── app.py                    ← Flask application (routes & API)
 ├── config.py                 ← AGENT_INSTRUCTIONS + all configuration
 ├── requirements.txt
-├── Dockerfile
 ├── .env.example              ← Copy to .env and fill in your credentials
-├── .dockerignore
 │
 ├── utils/
 │   ├── __init__.py
@@ -148,80 +145,6 @@ AGENT_TOP_P=0.9
 
 ---
 
-## 🐳 Docker
-
-### Build & run locally
-
-```bash
-docker build -t startup-blueprint-ai .
-docker run -p 8080:8080 \
-  -e WATSONX_API_KEY=<key> \
-  -e WATSONX_PROJECT_ID=<project_id> \
-  -e WATSONX_URL=https://us-south.ml.cloud.ibm.com \
-  -e FLASK_SECRET_KEY=<secret> \
-  startup-blueprint-ai
-```
-
----
-
-## ☁️ Deploy to IBM Cloud Code Engine
-
-### Prerequisites
-- [IBM Cloud CLI](https://cloud.ibm.com/docs/cli) with Code Engine plugin
-- Container registry (IBM Container Registry recommended)
-
-### Steps
-
-```bash
-# 1. Login to IBM Cloud
-ibmcloud login --sso
-
-# 2. Target your region and resource group
-ibmcloud target -r us-south -g Default
-
-# 3. Login to IBM Container Registry
-ibmcloud cr login
-ibmcloud cr namespace-add <your-namespace>
-
-# 4. Build and push image
-docker build -t us.icr.io/<namespace>/startup-blueprint-ai:latest .
-docker push us.icr.io/<namespace>/startup-blueprint-ai:latest
-
-# 5. Create Code Engine project (skip if existing)
-ibmcloud ce project create --name startup-blueprint-project
-ibmcloud ce project select --name startup-blueprint-project
-
-# 6. Create registry secret (for private images)
-ibmcloud ce secret create-registry \
-  --name icr-secret \
-  --server us.icr.io \
-  --username iamapikey \
-  --password <IBM Cloud API key>
-
-# 7. Deploy the application
-ibmcloud ce application create \
-  --name startup-blueprint-ai \
-  --image us.icr.io/<namespace>/startup-blueprint-ai:latest \
-  --registry-secret icr-secret \
-  --port 8080 \
-  --cpu 1 \
-  --memory 2G \
-  --min-scale 1 \
-  --env WATSONX_API_KEY=<key> \
-  --env WATSONX_PROJECT_ID=<project_id> \
-  --env WATSONX_URL=https://us-south.ml.cloud.ibm.com \
-  --env FLASK_SECRET_KEY=<secret> \
-  --env FLASK_ENV=production
-
-# 8. Get the public URL
-ibmcloud ce application get --name startup-blueprint-ai --output url
-```
-
-> **Tip**: Use [IBM Cloud Secrets Manager](https://cloud.ibm.com/docs/secrets-manager)  
-> or Code Engine secrets instead of `--env` for production credentials.
-
----
-
 ## 🌐 API Reference
 
 | Method | Endpoint | Description |
@@ -232,7 +155,7 @@ ibmcloud ce application get --name startup-blueprint-ai --output url
 | `POST` | `/api/generate` | Generate full 18-section blueprint |
 | `POST` | `/api/validate` | Quick 5-dimension idea validation |
 | `POST` | `/api/download-pdf` | Download blueprint as PDF |
-| `GET` | `/api/health` | Health check (Code Engine liveness probe) |
+| `GET` | `/api/health` | Health check |
 | `GET` | `/api/history` | Retrieve session history as JSON |
 | `POST` | `/api/clear-history` | Clear session blueprint history |
 
@@ -256,9 +179,8 @@ ibmcloud ce application get --name startup-blueprint-ai --output url
 
 ## 🔒 Security Notes
 
-- Never commit `.env` to version control (it's in `.dockerignore` / `.gitignore`)
-- Rotate `FLASK_SECRET_KEY` before production deployment
-- Use Code Engine secrets or IBM Secrets Manager for credentials in production
+- Never commit `.env` to version control (it's in `.gitignore`)
+- Rotate `FLASK_SECRET_KEY` before sharing or publishing
 - The app enforces a 2 MB request size limit and 3 000-character idea cap
 
 ---
