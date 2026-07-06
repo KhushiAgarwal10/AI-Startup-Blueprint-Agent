@@ -191,7 +191,7 @@ AGENT_TOP_P=0.9
 |---|---|
 | [Python 3.12](https://python.org) | Runtime |
 | [Flask 3](https://flask.palletsprojects.com) | Web framework |
-| [IBM Granite (ibm/granite-3-3-8b-instruct)](https://www.ibm.com/granite) | AI model |
+| [IBM Granite (ibm/granite-4-h-small)](https://www.ibm.com/granite) | AI model |
 | [ibm-watsonx-ai](https://ibm.github.io/watson-machine-learning-lib/) | watsonx.ai Python SDK |
 | [Bootstrap 5.3](https://getbootstrap.com) | UI framework |
 | [Bootstrap Icons](https://icons.getbootstrap.com) | Icon set |

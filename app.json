@@ -1,0 +1,35 @@
+{
+  "name": "Startup Blueprint AI",
+  "description": "An AI-powered Startup Blueprint Generator built using IBM watsonx.ai and IBM Granite 4-H Small model. The application helps entrepreneurs transform startup ideas into comprehensive business blueprints with idea validation, business readiness scoring, and downloadable PDF reports.",
+  "repository": "https://github.com/KhushiAgarwal10/AI-Startup-Blueprint-Agent",
+  "logo": "https://www.ibm.com/favicon.ico",
+  "keywords": [
+    "IBM",
+    "watsonx.ai",
+    "Granite",
+    "Flask",
+    "Python",
+    "AI",
+    "Startup",
+    "Business Blueprint"
+  ],
+  "env": {
+    "WATSONX_API_KEY": {
+      "description": "IBM watsonx.ai API Key"
+    },
+    "WATSONX_PROJECT_ID": {
+      "description": "IBM watsonx.ai Project ID"
+    },
+    "WATSONX_URL": {
+      "description": "IBM watsonx.ai Service URL",
+      "value": "https://eu-de.ml.cloud.ibm.com"
+    },
+    "GRANITE_MODEL_ID": {
+      "description": "IBM Granite Foundation Model",
+      "value": "ibm/granite-4-h-small"
+    },
+    "FLASK_SECRET_KEY": {
+      "description": "Flask Secret Key"
+    }
+  }
+}
