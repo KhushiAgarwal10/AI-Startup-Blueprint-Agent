@@ -1,6 +1,6 @@
 # 🚀 Startup Blueprint AI
 
-> **AI-powered startup blueprint generator** built with Python Flask, Bootstrap 5,  
+> **AI-powered startup blueprint generator** built with Python Flask,IBM bob, Bootstrap 5,  
 > and **IBM Granite on watsonx.ai**.
 
 ---
@@ -86,7 +86,7 @@ Edit `.env` and fill in:
 ```env
 WATSONX_API_KEY=<your IBM Cloud API key>
 WATSONX_PROJECT_ID=<your watsonx.ai project ID>
-WATSONX_URL=https://us-south.ml.cloud.ibm.com   # choose your region
+WATSONX_URL=https://eu-de.ml.cloud.ibm.com   # choose your region
 FLASK_SECRET_KEY=<random string>
 ```
 
@@ -137,7 +137,7 @@ All agent behaviour is controlled by the `AGENT_INSTRUCTIONS` dict in [`config.p
 
 **Model & generation tuning** via `.env`:
 ```env
-GRANITE_MODEL_ID=ibm/granite-3-3-8b-instruct
+GRANITE_MODEL_ID="ibm/granite-4-h-small"
 AGENT_TEMPERATURE=0.7      # 0 = conservative, 1 = creative
 AGENT_MAX_TOKENS=4096      # higher = more detailed blueprints
 AGENT_TOP_P=0.9
